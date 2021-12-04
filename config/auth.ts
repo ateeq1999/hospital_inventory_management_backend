@@ -37,21 +37,55 @@ const authConfig: AuthConfig = {
         model: () => import('App/Models/Admin'),
       },
     },
-    user: {
+    manager: {
       driver: 'oat',
 
       tokenProvider: {
         type: 'api',
         driver: 'redis',
         redisConnection: 'local',
-        foreignKey: 'user_id',
+        foreignKey: 'manager_id',
       },
 
       provider: {
         driver: 'lucid',
         identifierKey: 'id',
-        uids: ['ssn'],
-        model: () => import('App/Models/User'),
+        uids: ['email'],
+        model: () => import('App/Models/Manager'),
+      },
+    },
+    staff: {
+      driver: 'oat',
+
+      tokenProvider: {
+        type: 'api',
+        driver: 'redis',
+        redisConnection: 'local',
+        foreignKey: 'staff_id',
+      },
+
+      provider: {
+        driver: 'lucid',
+        identifierKey: 'id',
+        uids: ['phone'],
+        model: () => import('App/Models/Staff'),
+      },
+    },
+    doctor: {
+      driver: 'oat',
+
+      tokenProvider: {
+        type: 'api',
+        driver: 'redis',
+        redisConnection: 'local',
+        foreignKey: 'doctor_id',
+      },
+
+      provider: {
+        driver: 'lucid',
+        identifierKey: 'id',
+        uids: ['phone'],
+        model: () => import('App/Models/Doctor'),
       },
     },
     basic: {

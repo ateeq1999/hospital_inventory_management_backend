@@ -6,7 +6,9 @@
  */
 
 import Admin from 'App/Models/Admin'
-import User from 'App/Models/User';
+import Manager from 'App/Models/Manager';
+import Staff from 'App/Models/Staff';
+import Doctor from 'App/Models/Doctor';
 
 declare module '@ioc:Adonis/Addons/Auth' {
   /*
@@ -14,9 +16,9 @@ declare module '@ioc:Adonis/Addons/Auth' {
   | Providers
   |--------------------------------------------------------------------------
   |
-  | The providers are used to fetch users. The Auth module comes pre-bundled
+  | The providers are used to fetch Doctors. The Auth module comes pre-bundled
   | with two providers that are `Lucid` and `Database`. Both uses database
-  | to fetch user details.
+  | to fetch doctor details.
   |
   | You can also create and register your own custom providers.
   |
@@ -24,23 +26,31 @@ declare module '@ioc:Adonis/Addons/Auth' {
   interface ProvidersList {
     /*
     |--------------------------------------------------------------------------
-    | User Provider
+    | Doctor Provider
     |--------------------------------------------------------------------------
     |
-    | The following provider uses Lucid models as a driver for fetching user
+    | The following provider uses Lucid models as a driver for fetching doctor
     | details from the database for authentication.
     |
     | You can create multiple providers using the same underlying driver with
     | different Lucid models.
     |
     */
-    user: {
-      implementation: LucidProviderContract<typeof User>,
-      config: LucidProviderConfig<typeof User>,
+    doctor: {
+      implementation: LucidProviderContract<typeof Doctor>,
+      config: LucidProviderConfig<typeof Doctor>,
     },
     admin: {
       implementation: LucidProviderContract<typeof Admin>,
       config: LucidProviderConfig<typeof Admin>,
+    },
+    manager: {
+      implementation: LucidProviderContract<typeof Manager>,
+      config: LucidProviderConfig<typeof Manager>,
+    },
+    staff: {
+      implementation: LucidProviderContract<typeof Staff>,
+      config: LucidProviderConfig<typeof Staff>,
     },
   }
 
@@ -49,14 +59,14 @@ declare module '@ioc:Adonis/Addons/Auth' {
   | Guards
   |--------------------------------------------------------------------------
   |
-  | The guards are used for authenticating users using different drivers.
+  | The guards are used for authenticating Doctors using different drivers.
   | The auth module comes with 3 different guards.
   |
   | - SessionGuardContract
   | - BasicAuthGuardContract
   | - OATGuardContract ( Opaque access token )
   |
-  | Every guard needs a provider for looking up users from the database.
+  | Every guard needs a provider for looking up Doctors from the database.
   |
   */
   interface GuardsList {
@@ -65,8 +75,8 @@ declare module '@ioc:Adonis/Addons/Auth' {
     | Web Guard
     |--------------------------------------------------------------------------
     |
-    | The web guard uses sessions for maintaining user login state. It uses
-    | the `user` provider for fetching user details.
+    | The web guard uses sessions for maintaining doctor login state. It uses
+    | the `doctor` provider for fetching doctor details.
     |
     */
     web: {
@@ -86,17 +96,25 @@ declare module '@ioc:Adonis/Addons/Auth' {
       implementation: OATGuardContract<'admin', 'api'>,
       config: OATGuardConfig<'admin'>,
     },
-    user: {
-      implementation: OATGuardContract<'user', 'api'>,
-      config: OATGuardConfig<'user'>,
+    doctor: {
+      implementation: OATGuardContract<'doctor', 'api'>,
+      config: OATGuardConfig<'doctor'>,
+    },
+    manager: {
+      implementation: OATGuardContract<'manager', 'api'>,
+      config: OATGuardConfig<'manager'>,
+    },
+    staff: {
+      implementation: OATGuardContract<'staff', 'api'>,
+      config: OATGuardConfig<'staff'>,
     },
     /*
     |--------------------------------------------------------------------------
     | Basic Auth Guard
     |--------------------------------------------------------------------------
     |
-    | The basic guard uses basic auth for maintaining user login state. It uses
-    | the `user` provider for fetching user details.
+    | The basic guard uses basic auth for maintaining doctor login state. It uses
+    | the `doctor` provider for fetching doctor details.
     |
     */
     basic: {

@@ -20,22 +20,52 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-// ADMIN AUTH ROUTES
-Route.post("/api/admin/login", 'AuthController.login')
-Route.post("/api/admin/register", 'AuthController.register')
+Route.group(() => {
 
-// USER AUTH ROUTES
-Route.post("/api/login", 'UserAuthController.login')
-Route.post("/api/register", 'UserAuthController.register')
+    // ADMIN AUTH ROUTES
+    Route.post("/admin/login", 'AuthController.login')
+    Route.post("/admin/register", 'AuthController.register')
+    
+    // DOCTOR AUTH ROUTES
+    Route.post("/doctor/login", 'DoctorAuthController.login')
+    Route.post("/doctor/register", 'DoctorAuthController.register')
+    
+    // MANAGER AUTH ROUTES
+    Route.post("/manager/login", 'ManagerAuthController.login')
+    Route.post("/manager/register", 'ManagerAuthController.register')
+    
+    // STAFF AUTH ROUTES
+    Route.post("/staff/login", 'StaffAuthController.login')
+    Route.post("/staff/register", 'StaffAuthController.register')
+    
+}).prefix('api/auth').middleware('auth:api')
 
 Route.group(() => {
     // Admins Routes
     Route.resource('admins', 'AdminsController').apiOnly()
-}).prefix('api').middleware('auth:api')
-
-Route.group(() => {
-    // Users Routes
-    Route.resource('users', 'UsersController').apiOnly()
-}).prefix('api').middleware('auth:api,user')
     
+    // units Routes
+    Route.resource('units', 'UnitsController').apiOnly()
+    
+    // equipment Routes
+    Route.resource('equipments', 'EquipmentController').apiOnly()
+    
+    // managers Routes
+    Route.resource('managers', 'ManagersController').apiOnly()
+    
+    // staff Routes
+    Route.resource('staff', 'StaffController').apiOnly()
+    
+    // departments Routes
+    Route.resource('departments', 'DepartmentsController').apiOnly()
+    
+    // doctors Routes
+    Route.resource('doctors', 'DoctorsController').apiOnly()
+    
+    // orders Routes
+    Route.resource('orders', 'OrdersController').apiOnly()
+})
+.prefix('api')
+// .middleware('auth:api,manager,staff,doctor')
+
 Route.on('*').render('app')
