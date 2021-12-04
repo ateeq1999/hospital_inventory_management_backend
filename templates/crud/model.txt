@@ -1,0 +1,63 @@
+import { DateTime } from 'luxon'
+import {
+  column,
+  beforeCreate,
+  afterCreate,
+  BaseModel,
+} from '@ioc:Adonis/Lucid/Orm'
+import UuidHook from './hooks/UuidHook'
+
+export default class {{ modelName }} extends BaseModel {
+  public static selfAssignPrimaryKey = true
+
+  @column({ isPrimary: true })
+  public id: string
+
+  {{#feilds}}
+  {{#isDate}}
+  @column.date()
+  public {{feildName}}: DateTime
+  {{/isDate}}
+  {{#isNumber}}
+  @column()
+  public {{feildName}}: number
+  {{/isNumber}}
+  {{#isString}}
+  @column()
+  public {{feildName}}: string
+  {{/isString}}
+  {{#isBool}}
+  @column({
+    serialize(value: number) {
+      return Boolean(value)
+    },
+  })
+	public {{feildName}}: Boolean
+  {{/isBool}}
+
+  {{/feilds}}
+  {{#hasCover}}
+  @column({
+    serialize: (value?: String) => {
+      return value ? `http://localhost:3333/uploads/{{resourceName}}/${value}` : "http://localhost:3333/uploads/{{resourceName}}/imageNotFound.png"
+    }
+  })
+  public cover_image: String
+  {{/hasCover}}
+
+  @column.dateTime({ autoCreate: true })
+  public createdAt: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  public updatedAt: DateTime
+
+  @beforeCreate()
+  public static generateUUID({{singleResourceName}}: {{modelName}}) {
+    UuidHook.generateUUID({{singleResourceName}})
+  }
+
+  @afterCreate()
+  public static async new{{modelName}}Created ({{singleResourceName}}: {{ modelName }}) {
+    console.log({{singleResourceName}})
+  }
+}

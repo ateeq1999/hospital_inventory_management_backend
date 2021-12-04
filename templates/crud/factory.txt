@@ -1,0 +1,38 @@
+import Factory from '@ioc:Adonis/Lucid/Factory'
+import {{ modelName }} from 'App/Models/{{ modelName }}'
+import slugify from 'slugify'
+import CustomerFactory from './CustomerFactory'
+import UserFactory from './UserFactory'
+
+function getRndInteger(min, max) {
+  return Math.floor(Math.random() * (max - min) ) + min;
+}
+
+const {{ modelName }}Factory = Factory.define({{ modelName }}, ({ faker }) => {
+  const generated{{ modelName }} = {
+    {{#feilds}}
+    {{#isDate}}
+    {{feildName}}: DateTime.now()
+    {{/isDate}}
+    {{#isBool}}
+    {{feildName}}: faker.datatype.boolean(),
+    {{/isBool}}
+    {{#isNumber}}
+    {{feildName}}: getRndInteger(50, 500),
+    {{/isNumber}}
+    {{#isString}}
+    {{feildName}}: faker.random.words(50),
+    {{/isString}}
+    {{/feilds}}
+    {{#hasCover}}
+    cover_image: faker.image.avatar(),
+    {{/hasCover}}
+  }
+
+  //console.log(generated{{ modelName }})
+
+  return generated{{ modelName }}
+})
+  .build()
+
+export default {{ modelName }}Factory

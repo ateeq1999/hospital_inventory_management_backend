@@ -1,0 +1,41 @@
+import { schema } from '@ioc:Adonis/Core/Validator'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+
+export default class {{ filename }} {
+	constructor (protected ctx: HttpContextContract) {
+	}
+
+	public schema = schema.create({
+		{{#feilds}}
+		{{#isDate}}
+		{{feildName}}: schema.date(),
+		{{/isDate}}
+		{{#isNumber}}
+		{{feildName}}: schema.number(),
+		{{/isNumber}}
+		{{#isString}}
+		{{feildName}}: schema.string({}),
+		{{/isString}}
+		{{#isBool}}
+		{{feildName}}: schema.boolean(),
+		{{/isBool}}
+		{{/feilds}}
+	})
+
+	public messages = {
+		{{#feilds}}
+		{{#isDate}}
+		'{{feildName}}.required': '{{feildName}} is required',
+		{{/isDate}}
+		{{#isNumber}}
+		'{{feildName}}.required': '{{feildName}} is required',
+		{{/isNumber}}
+		{{#isString}}
+		'{{feildName}}.required': '{{feildName}} is required',
+		{{/isString}}
+		{{#isBool}}
+		'{{feildName}}': '{{feildName}} is required',
+		{{/isBool}}
+		{{/feilds}}
+	}
+}

@@ -1,0 +1,104 @@
+import test from 'japa'
+import {{ modelName }} from 'App/Models/{{ modelName }}'
+import Database from '@ioc:Adonis/Lucid/Database'
+{{#hasDate}}
+import { DateTime } from 'luxon';
+{{/hasDate}}
+import { string } from '@ioc:Adonis/Core/Helpers'
+
+
+test.group('{{resourceName}} Model', (group) => {
+  group.beforeEach(async () => {
+    await Database.beginGlobalTransaction()
+  })
+
+  group.afterEach(async () => {
+    await Database.rollbackGlobalTransaction()
+  })
+  
+  test('ensure {{ modelName }} cruds work fine', async (assert) => {
+    var cruds = {
+      all: false,
+      create: false,
+      find: false,
+      update: false,
+      delete: false,
+    }
+
+    var {{resourceName}} = Array()
+
+    const {{ singleResourceName }}Create = new {{ modelName }}()
+
+    {{#feilds}}
+    {{#isDate}}
+    {{ singleResourceName }}Create.{{feildName}} = DateTime.now()
+    {{/isDate}}
+    {{#isNumber}}
+    {{ singleResourceName }}Create.{{feildName}} = Math.floor(Math.random() * (500 - 50) ) + 50;
+    {{/isNumber}}
+    {{#isString}}
+    {{ singleResourceName }}Create.{{feildName}} = string.generateRandom(32)
+    {{/isString}}
+    {{#isBool}}
+    {{ singleResourceName }}Create.{{feildName}} = false
+    {{/isBool}}
+    {{/feilds}}
+
+    {{#hasCover}}
+    {{ singleResourceName }}Create.cover_image = "create.png"
+    {{/hasCover}}
+
+    await {{ singleResourceName }}Create.save()
+
+    if ({{ singleResourceName }}Create.$isPersisted) {
+      cruds.create = true
+
+      {{resourceName}} = await {{modelName}}.all()
+
+      if({{resourceName}}.length > 0){
+        cruds.all = true
+      }
+    }
+
+    const {{ singleResourceName }}Find = await {{ modelName }}.findOrFail({{ singleResourceName }}Create.id)
+
+    if ({{ singleResourceName }}Find.id = {{ singleResourceName }}Create.id) {
+      cruds.find = true
+    }
+
+    await {{ singleResourceName }}Find.merge({
+      {{#feilds}}
+      {{feildName}}: {{ singleResourceName }}Create.{{feildName}},
+      {{/feilds}}
+      {{#hasCover}}
+      cover_image: "updated.png",
+      {{/hasCover}}
+    }).save()
+
+    if({{ singleResourceName }}Find.$isPersisted){
+      cruds.update = true
+
+      {{resourceName}} = await {{modelName}}.all()
+
+      if({{resourceName}}.length > 0){
+        cruds.all = true
+      }
+    }
+
+    await {{ singleResourceName }}Find.delete()
+
+    {{resourceName}} = await {{modelName}}.all()
+
+    if({{resourceName}}.length == 0){
+      cruds.delete = true
+    }
+
+    assert.deepEqual(cruds, {
+      all: true,
+      create: true,
+      find: true,
+      update: true,
+      delete: true,
+    })
+  })
+})

@@ -1,0 +1,107 @@
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import {{ modelName }} from 'App/Models/{{ modelName }}'
+import Create{{ modelName }}Validator from 'App/Validators/Create{{ modelName }}Validator'
+{{#hasCover}}
+import Application from '@ioc:Adonis/Core/Application'
+import CoverImageValidator from 'App/Validators/CoverImageValidator'
+import fs from 'fs'
+{{/hasCover}}
+
+export default class {{ controllerName }} {
+	public async index ({ response }: HttpContextContract) {
+		const {{resourceName}} = await {{ modelName }}.all()
+
+		return response.status(200).json({{resourceName}})
+	}
+
+	public async create ({ response }: HttpContextContract) {
+		return response.json({msg: '{{resourceName}}.create'})
+	}
+
+	public async store ({ request, response }: HttpContextContract) {
+		const data = await request.validate(Create{{ modelName }}Validator)
+
+		const {{ singleResourceName }} = await {{ modelName }}.create(data)
+
+		{{#hasCover}}
+		if(request.file('cover_image')){
+			const validatedImage = await request.validate(CoverImageValidator)
+
+			const imageName = `${new Date().getTime()}.${validatedImage.cover_image.extname}`
+
+			{{ singleResourceName }}.cover_image = imageName
+
+			await validatedImage.cover_image.move(Application.tmpPath('uploads/{{resourceName}}'), {
+				name: `${imageName}`,
+			})
+		}
+		{{/hasCover}}
+
+		await {{singleResourceName}}.save()
+
+		return response.status(201).json({{ singleResourceName }})
+	}
+
+	public async show ({ response, params }: HttpContextContract) {
+		const {{ singleResourceName }} = await {{ modelName }}.findOrFail(params.id)
+
+		return response.status(200).json({{ singleResourceName }})
+	}
+
+	public async edit ({}: HttpContextContract) {
+	}
+
+	public async update ({ params, request, response }: HttpContextContract) {
+		const data = await request.validate(Create{{ modelName }}Validator)
+
+		const {{ singleResourceName }} = await {{ modelName }}.findOrFail(params.id)
+
+		await  {{singleResourceName}}.merge(data).save()
+		
+		{{#hasCover}}
+		if(request.file('cover_image')){
+		
+			const validatedImage = await request.validate(CoverImageValidator)
+
+			const imageName = `${new Date().getTime()}.${validatedImage.cover_image.extname}`
+
+			const oldImagePath = Application.tmpPath('uploads/{{resourceName}}/')  + {{ singleResourceName }}.cover_image
+
+			{{ singleResourceName }}.cover_image = imageName
+
+			await validatedImage.cover_image.move(Application.tmpPath('uploads/{{resourceName}}'), {
+				name: `${imageName}`,
+			})
+
+			if(fs.existsSync(oldImagePath)){
+				// delete the image from the files
+				fs.unlinkSync(oldImagePath);
+			}
+		}
+		{{/hasCover}}
+
+		await {{singleResourceName}}.save()
+
+		return response.status(201).json({{ singleResourceName }})
+	}
+
+	public async destroy ({ params, response }: HttpContextContract) {
+		const {{ singleResourceName }} = await {{ modelName }}.findOrFail(params.id)
+
+		{{#hasCover}}
+		const image = Application.tmpPath('uploads/{{resourceName}}/') + {{ singleResourceName }}.cover_image
+
+		if(fs.existsSync(image)){
+			// delete a file
+			fs.unlinkSync(image);
+		}
+		{{/hasCover}}
+
+		await {{ singleResourceName }}.delete()
+
+		return response.status(203).json({
+			msg: "{{ modelName }} Deleted",
+			seccess: true
+		})
+	}
+}
