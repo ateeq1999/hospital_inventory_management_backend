@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import auth from './modules/auth'
 import admin from './modules/admin'
+import unit from './modules/unit'
 
 Vue.use(Vuex)
 
@@ -22,5 +23,6 @@ export default new Vuex.Store({
   modules: {
     Auth: auth,
     Admin: admin,
+    Unit: unit,
   }
 })

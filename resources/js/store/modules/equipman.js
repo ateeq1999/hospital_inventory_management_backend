@@ -1,58 +1,58 @@
 const state = {
-    unit: {},
-    units: [],
+    equipman: {},
+    equipmen: [],
     error: null,
     status: 'Loading',
 }
 
 const getters = {
-    unit: state => state.unit,
-    units: state => state.units,
+    equipman: state => state.equipman,
+    equipmen: state => state.equipmen,
     error: state => state.error,
 }
 
 const actions = {
     index({commit}){
         return new Promise((resolve, reject) => {
-            $http.get('/units')
+            $http.get('/equipmen')
             .then(resp => {
-                const units = resp.data
-                localStorage.setItem('units', JSON.stringify(units))
-                commit('UNITS_SUCCESS', units)
+                const equipmen = resp.data
+                localStorage.setItem('equipmen', JSON.stringify(equipmen))
+                commit('equipmen_success', equipmen)
                 resolve(resp)
             })
             .catch(err => {
-                commit('UNIT_ERROR', err)
-                localStorage.removeItem('units')
+                commit('equipmen_error', err)
+                localStorage.removeItem('equipmen')
                 reject(err)
             })
         })
     },
     show({commit}, unitId){
         return new Promise((resolve, reject) => {
-            $http.get(`/units/${unitId}`)
+            $http.get(`/equipmen/${unitId}`)
             .then(resp => {
-                const unit = resp.data
-                localStorage.setItem('unit', JSON.stringify(unit))
-                commit('UNIT_SUCCESS', unit)
+                const equipman = resp.data
+                localStorage.setItem('equipman', JSON.stringify(equipman))
+                commit('equipman_success', equipman)
                 resolve(resp)
             })
             .catch(err => {
-                commit('UNIT_ERROR', err)
-                localStorage.removeItem('unit')
+                commit('equipmen_error', err)
+                localStorage.removeItem('equipman')
                 reject(err)
             })
         })
     },
     store({commit}, formData){
         return new Promise((resolve, reject) => {
-            $http.post(`/units`, formData)
+            $http.post(`/equipmen`, formData)
             .then(resp => {
                 commit('CREATE_SUCCESS', 'SUCCESS')
                 resolve(resp)
             })
             .catch(err => {
-                commit('UNIT_ERROR', err)
+                commit('equipmen_error', err)
                 reject(err)
             })
         })
@@ -60,20 +60,20 @@ const actions = {
     update({commit}, formData){
         console.log(formData)
         return new Promise((resolve, reject) => {
-            $http.put(`/units/${formData.id}`, formData)
+            $http.put(`/equipmen/${formData.id}`, formData)
             .then(resp => {
-                const unit = resp.data
+                const equipman = resp.data
 
-                localStorage.setItem('unit', JSON.stringify(unit))
+                localStorage.setItem('equipman', JSON.stringify(equipman))
 
-                commit('UNIT_SUCCESS', unit)
+                commit('equipman_success', equipman)
 
                 resolve(resp)
             })
             .catch(err => {
-                commit('UNIT_ERROR', err)
+                commit('equipmen_error', err)
 
-                localStorage.removeItem('unit')
+                localStorage.removeItem('equipman')
                 
                 reject(err)
             })
@@ -81,16 +81,16 @@ const actions = {
     },
     delete({commit}, unitId){
         return new Promise((resolve, reject) => {
-            $http.delete(`/units/${unitId}`)
+            $http.delete(`/equipmen/${unitId}`)
             .then(resp => {
-                localStorage.removeItem('unit')
+                localStorage.removeItem('equipman')
                 
                 resolve(resp)
             })
             .catch(err => {
-                commit('UNIT_ERROR', err)
+                commit('equipmen_error', err)
 
-                localStorage.removeItem('unit')
+                localStorage.removeItem('equipman')
 
                 reject(err)
             })
@@ -102,14 +102,14 @@ const mutations = {
   CREATE_SUCCESS(state, payload){
     state.status = payload
   },
-  UNIT_ERROR(state, error){
+  equipmen_error(state, error){
     state.error = error
   },
-  UNIT_SUCCESS(state, payload){
-    state.unit = payload
+  equipman_success(state, payload){
+    state.equipman = payload
   },
-  UNITS_SUCCESS(state, payload){
-    state.units = payload
+  equipmen_success(state, payload){
+    state.equipmen = payload
   },
 }
 

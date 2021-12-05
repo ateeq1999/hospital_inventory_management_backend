@@ -1,0 +1,122 @@
+const state = {
+    {{singleResourceName}}: {},
+    {{resourceName}}: [],
+    error: null,
+    status: 'Loading',
+}
+
+const getters = {
+    {{singleResourceName}}: state => state.{{singleResourceName}},
+    {{resourceName}}: state => state.{{resourceName}},
+    error: state => state.error,
+}
+
+const actions = {
+    index({commit}){
+        return new Promise((resolve, reject) => {
+            $http.get('/{{resourceName}}')
+            .then(resp => {
+                const {{resourceName}} = resp.data
+                localStorage.setItem('{{resourceName}}', JSON.stringify({{resourceName}}))
+                commit('{{resourceName}}_success', {{resourceName}})
+                resolve(resp)
+            })
+            .catch(err => {
+                commit('{{resourceName}}_error', err)
+                localStorage.removeItem('{{resourceName}}')
+                reject(err)
+            })
+        })
+    },
+    show({commit}, unitId){
+        return new Promise((resolve, reject) => {
+            $http.get(`/{{resourceName}}/${unitId}`)
+            .then(resp => {
+                const {{singleResourceName}} = resp.data
+                localStorage.setItem('{{singleResourceName}}', JSON.stringify({{singleResourceName}}))
+                commit('{{singleResourceName}}_success', {{singleResourceName}})
+                resolve(resp)
+            })
+            .catch(err => {
+                commit('{{resourceName}}_error', err)
+                localStorage.removeItem('{{singleResourceName}}')
+                reject(err)
+            })
+        })
+    },
+    store({commit}, formData){
+        return new Promise((resolve, reject) => {
+            $http.post(`/{{resourceName}}`, formData)
+            .then(resp => {
+                commit('CREATE_SUCCESS', 'SUCCESS')
+                resolve(resp)
+            })
+            .catch(err => {
+                commit('{{resourceName}}_error', err)
+                reject(err)
+            })
+        })
+    },
+    update({commit}, formData){
+        console.log(formData)
+        return new Promise((resolve, reject) => {
+            $http.put(`/{{resourceName}}/${formData.id}`, formData)
+            .then(resp => {
+                const {{singleResourceName}} = resp.data
+
+                localStorage.setItem('{{singleResourceName}}', JSON.stringify({{singleResourceName}}))
+
+                commit('{{singleResourceName}}_success', {{singleResourceName}})
+
+                resolve(resp)
+            })
+            .catch(err => {
+                commit('{{resourceName}}_error', err)
+
+                localStorage.removeItem('{{singleResourceName}}')
+                
+                reject(err)
+            })
+        })
+    },
+    delete({commit}, unitId){
+        return new Promise((resolve, reject) => {
+            $http.delete(`/{{resourceName}}/${unitId}`)
+            .then(resp => {
+                localStorage.removeItem('{{singleResourceName}}')
+                
+                resolve(resp)
+            })
+            .catch(err => {
+                commit('{{resourceName}}_error', err)
+
+                localStorage.removeItem('{{singleResourceName}}')
+
+                reject(err)
+            })
+        })
+    },
+}
+
+const mutations = {
+  CREATE_SUCCESS(state, payload){
+    state.status = payload
+  },
+  {{resourceName}}_error(state, error){
+    state.error = error
+  },
+  {{singleResourceName}}_success(state, payload){
+    state.{{singleResourceName}} = payload
+  },
+  {{resourceName}}_success(state, payload){
+    state.{{resourceName}} = payload
+  },
+}
+
+export default {
+    namespaced: true,
+    state,
+    getters,
+    actions,
+    mutations,
+}

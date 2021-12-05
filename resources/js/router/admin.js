@@ -1,3 +1,6 @@
+import equipment from './routes/equipment'
+import units from './routes/units'
+
 export default [
   {
     path: '/login',
@@ -11,4 +14,6 @@ export default [
     component: () => import('../views/Dashboard.vue'),
     meta: { authAdmin: true },
   },
+  ...units,
+  ...equipment
 ]

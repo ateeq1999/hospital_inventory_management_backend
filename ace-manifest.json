@@ -19,6 +19,28 @@
         }
       ]
     },
+    "module": {
+      "settings": {
+        "loadApp": true
+      },
+      "commandPath": "./commands/Module",
+      "commandName": "module",
+      "description": "",
+      "args": [],
+      "aliases": [],
+      "flags": []
+    },
+    "ui": {
+      "settings": {
+        "loadApp": true
+      },
+      "commandPath": "./commands/Ui",
+      "commandName": "ui",
+      "description": "",
+      "args": [],
+      "aliases": [],
+      "flags": []
+    },
     "dump:rcfile": {
       "settings": {},
       "commandPath": "@adonisjs/core/build/commands/DumpRc",

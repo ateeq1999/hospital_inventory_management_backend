@@ -3,13 +3,7 @@
 - name
 - is_active
 ## Equipment
-- id
-- name
-- quantity
-- is_expire
-- expire_date
-- unit_id
-- is_active
+- id, name, quantity, is_expire, expire_date, unit_id, is_active
 ## Manager
 - id
 - name

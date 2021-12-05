@@ -1,0 +1,237 @@
+<template>
+    <v-row justify="center">
+        <v-col
+            cols="12"
+            sm="10"
+            md="8"
+            lg="6"
+        >
+            <v-card flat class="pa-16">
+                <v-card-text v-if="isLoading">
+                    <v-skeleton-loader
+                        type="card-avatar, article, actions"
+                    >
+                    </v-skeleton-loader>
+                </v-card-text>
+                <v-card-text v-if="!isLoading" >
+                    <v-row>
+                    {{#feilds}}
+                        {{#isString}}
+                        <v-col cols="12" sm="12" md="12" >
+                            <v-text-field
+                                label="{{feildName}}"
+                                outlined
+                                v-model="form.{{feildName}}"
+                                dense
+                            ></v-text-field>
+                        </v-col>
+                        {{/isString}}
+                        {{#isDate}}
+                        <v-col cols="12" sm="12" md="12" >
+                            <v-menu
+                                v-model="open_{{feildName}}_picker"
+                                :close-on-content-click="false"
+                                :nudge-right="40"
+                                transition="scale-transition"
+                                offset-y
+                                min-width="auto"
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                <v-text-field
+                                    outlined
+                                    dense
+                                    v-model="form.{{feildName}}"
+                                    label="{{feildName}}"
+                                    readonly
+                                    v-bind="attrs"
+                                    v-on="on"
+                                ></v-text-field>
+                                    <!-- prepend-icon="mdi-calendar" -->
+                                </template>
+                                <v-date-picker
+                                v-model="form.{{feildName}}"
+                                @input="open_{{feildName}}_picker = false"
+                                ></v-date-picker>
+                            </v-menu>
+                        </v-col>
+                        {{/isDate}}
+                        {{#isNumber}}
+                        <v-col cols="12" sm="12" md="12" >
+                            <v-text-field
+                                label="{{feildName}}"
+                                outlined
+                                v-model="form.{{feildName}}"
+                                dense
+                                type="number"
+                            ></v-text-field>
+                        </v-col>
+                        {{/isNumber}}
+                        {{#isBool}}
+                        <v-col cols="12" sm="12" md="12" >
+                            <v-switch
+                                v-model="form.{{feildName}}"
+                                label="{{feildName}}"
+                                :color="form.{{feildName}} ? 'green' : 'red'"
+                            ></v-switch>
+                        </v-col>
+                        {{/isBool}}
+                        {{#BelongsTo}}
+                        <v-col cols="12" sm="12" md="12" >
+                            <v-autocomplete
+                                v-model="form.{{feildName}}"
+                                    :items="{{hasManyTableName}}"
+                                    outlined
+                                    chips
+                                    color="blue-grey lighten-2"
+                                    label="{{hasManyTableName}}"
+                                    item-text="name"
+                                    item-value="id"
+                                    dense
+                                >
+                                <template v-slot:selection="data">
+                                    <v-chip
+                                        class="clickable"
+                                        v-bind="data.attrs"
+                                        :input-value="data.selected"
+                                        close
+                                        small
+                                        @click="removeFromSelected_{{hasManyTableName}}(data.item)"
+                                        v-text="data.item.name"
+                                    >
+                                    </v-chip>
+                                </template>
+                                <template v-slot:item="data">
+                                    <template>
+                                    <v-list-item-content v-text="data.item.name"></v-list-item-content>
+                                    </template>
+                                </template>
+                            </v-autocomplete>
+                        </v-col>
+                        {{/BelongsTo}}
+                    {{/feilds}}
+                    </v-row>
+                </v-card-text>
+                <v-divider class="mt-12"></v-divider>
+                <v-card-actions>
+                    <v-btn 
+                        text
+                        @click="Cancel"
+                    >
+                        Cancel
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        color="primary"
+                        text
+                        @click="submit"
+                    >
+                        Submit
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-col>
+    </v-row>
+</template>
+
+<script>
+import { mapActions, mapGetters } from 'vuex'
+export default {
+    data: () => ({
+        form: {
+            {{#feilds}}
+            {{#isString}}
+            {{feildName}}: null,
+            {{/isString}}
+            {{#isDate}}
+            {{feildName}}: null,
+            {{/isDate}}
+            {{#isNumber}}
+            {{feildName}}: null,
+            {{/isNumber}}
+            {{#isBool}}
+            {{feildName}}: false,
+            {{/isBool}}
+            {{#BelongsTo}}
+            {{feildName}}: null,
+            {{/BelongsTo}}
+            {{/feilds}}
+        },
+        {{#feilds}}
+        {{#isDate}}
+        open_{{feildName}}_picker: false,
+        {{/isDate}}
+        {{/feilds}}
+        {{#feilds}}
+        {{#isBelongsTo}}
+        {{hasManyTableName}}Data: [],
+        {{/isBelongsTo}}
+        {{/feilds}}
+        isLoading: true,
+    }),
+    computed: {
+        ...mapGetters("{{modelName}}", ["{{singleResourceName}}"]),
+        {{#feilds}}
+        {{#isBelongsTo}}
+        ...mapGetters("{{BelongsToModelName}}", ["{{hasManyTableName}}"])
+        {{/isBelongsTo}}
+        {{/feilds}}
+    },
+    methods: {
+        ...mapActions("{{modelName}}", ["update", "show"]),
+        {{#feilds}}
+        {{#isBelongsTo}}
+        ...mapActions("{{BelongsToModelName}}", ["index"]),
+        {{/isBelongsTo}}
+        {{/feilds}}
+        {{#feilds}}
+        {{#isBelongsTo}}
+        removeFromSelected_{{hasManyTableName}} (item) {
+            const index = this.form.{{feildName}}.indexOf(item.id)
+            if (index >= 0) this.form.{{feildName}}.splice(index, 1)
+        },
+        {{/isBelongsTo}}
+        {{/feilds}}
+        async submit () {
+            this.isLoading = true
+
+            this.update(this.form)
+            .then(() => {
+                this.loader = false
+
+                this.$router.push('/{{resourceName}}')
+            })
+            .catch(err => console.log(err))
+
+            this.isLoading = false
+        },
+        async Cancel () {
+            this.form = {
+                {{#feilds}}
+                {{#isString}}
+                {{feildName}}: null,
+                {{/isString}}
+                {{#isDate}}
+                {{feildName}}: null,
+                {{/isDate}}
+                {{#isNumber}}
+                {{feildName}}: null,
+                {{/isNumber}}
+                {{#isBool}}
+                {{feildName}}: false,
+                {{/isBool}}
+                {{/feilds}}
+            },
+        },
+    },
+    created(){
+        this.isLoading = true
+
+        this.show(this.$route.params.id)
+        .then(res => {
+            this.form = this.{{singleResourceName}}
+        })
+
+        setTimeout(() => this.isLoading = false, 100)
+    }
+}
+</script>

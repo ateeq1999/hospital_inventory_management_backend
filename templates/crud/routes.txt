@@ -1,0 +1,27 @@
+export default [
+    {
+        path: '/{{resourceName}}',
+        name: '{{resourceName}}.index',
+        component: () => import('../../views/{{resourceName}}/Index.vue'),
+        meta: { authAdmin: true }
+    },
+    {
+        path: '/{{resourceName}}/create',
+        name: '{{resourceName}}.create',
+        component: () => import('../../views/{{resourceName}}/Create.vue'),
+        meta: { authAdmin: true }
+    },
+    {
+        path: '/{{resourceName}}/:id/edit',
+        name: '{{resourceName}}.edit',
+        component: () => import('../../views/{{resourceName}}/Edit.vue'),
+        meta: { authAdmin: true }
+    },
+    {
+        path: '/{{resourceName}}/:id',
+        name: '{{resourceName}}.show',
+        component: () => import('../../views/{{resourceName}}/Show.vue'),
+        meta: { authAdmin: true }
+    },
+]
+  
