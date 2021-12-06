@@ -39,7 +39,7 @@
                                 :color="form.is_expire ? 'green' : 'red'"
                             ></v-switch>
                         </v-col>
-                        <v-col cols="12" sm="12" md="12" >
+                        <v-col v-show="form.is_expire" cols="12" sm="12" md="12" >
                             <v-menu
                                 v-model="open_expire_date_picker"
                                 :close-on-content-click="false"
@@ -69,15 +69,15 @@
                         <v-col cols="12" sm="12" md="12" >
                             <v-autocomplete
                                 v-model="form.unit_id"
-                                    :items="units"
-                                    outlined
-                                    chips
-                                    color="blue-grey lighten-2"
-                                    label="units"
-                                    item-text="name"
-                                    item-value="id"
-                                    dense
-                                >
+                                :items="units"
+                                outlined
+                                chips
+                                color="blue-grey lighten-2"
+                                label="units"
+                                item-text="name"
+                                item-value="id"
+                                dense
+                            >
                                 <template v-slot:selection="data">
                                     <v-chip
                                         class="clickable"
@@ -147,20 +147,20 @@ export default {
         ...mapGetters("Unit", ["units"])
     },
     methods: {
-        ...mapActions("Equipmen", ["create"]),
+        ...mapActions("Equipmen", ["store"]),
         ...mapActions("Unit", ["index"]),
         async submit () {
             this.isLoading = true
 
-            await this.create(this.form)
+            await this.store(this.form)
 
-            this.$router.push('/equipmen/index')
+            this.$router.push('/equipment')
 
             this.isLoading = false
         },
         removeFromSelected_units (item) {
-            const index = this.form.unit_id.indexOf(item.id)
-            if (index >= 0) this.form.unit_id.splice(index, 1)
+            const index = this.units.indexOf(item.id)
+            if (index >= 0) this.units.splice(index, 1)
         },
         async Cancel () {
             this.form = {

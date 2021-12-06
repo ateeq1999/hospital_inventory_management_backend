@@ -1,3 +1,5 @@
+const RESOURCE_ROUTE = '{{resourceName}}'
+
 const state = {
     {{singleResourceName}}: {},
     {{resourceName}}: [],
@@ -14,7 +16,7 @@ const getters = {
 const actions = {
     index({commit}){
         return new Promise((resolve, reject) => {
-            $http.get('/{{resourceName}}')
+            $http.get(`/{{resourceName}}`)
             .then(resp => {
                 const {{resourceName}} = resp.data
                 localStorage.setItem('{{resourceName}}', JSON.stringify({{resourceName}}))
@@ -28,9 +30,9 @@ const actions = {
             })
         })
     },
-    show({commit}, unitId){
+    show({commit}, itemId){
         return new Promise((resolve, reject) => {
-            $http.get(`/{{resourceName}}/${unitId}`)
+            $http.get(`/{{resourceName}}/${itemId}`)
             .then(resp => {
                 const {{singleResourceName}} = resp.data
                 localStorage.setItem('{{singleResourceName}}', JSON.stringify({{singleResourceName}}))
@@ -79,9 +81,9 @@ const actions = {
             })
         })
     },
-    delete({commit}, unitId){
+    delete({commit}, itemId){
         return new Promise((resolve, reject) => {
-            $http.delete(`/{{resourceName}}/${unitId}`)
+            $http.delete(`/{{resourceName}}/${itemId}`)
             .then(resp => {
                 localStorage.removeItem('{{singleResourceName}}')
                 

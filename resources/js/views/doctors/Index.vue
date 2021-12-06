@@ -11,7 +11,7 @@
     <v-card-text v-if="!skeletonLoader" class="pa-16">
       <v-data-table
         :headers="headers"
-        :items="{{resourceName}}Data"
+        :items="doctorsData"
         sort-by="id"
         round
         flat
@@ -21,7 +21,7 @@
           <v-toolbar
             flat
           >
-            <v-toolbar-title>{{resourceName}}</v-toolbar-title>
+            <v-toolbar-title>doctors</v-toolbar-title>
             <v-divider
               class="mx-4 clickable"
               inset
@@ -36,7 +36,7 @@
               label="Search"
               single-line
               hide-details
-              @input="search{{modelName}}"
+              @input="searchDoctor"
             ></v-text-field>
             <v-divider
               class="mx-4 clickable"
@@ -46,13 +46,13 @@
             <v-btn
               dark
               class="clickable"
-              @click="create{{modelName}}"
+              @click="createDoctor"
             >
-              New {{modelName}}
+              New Doctor
             </v-btn>
             <v-dialog v-model="dialog" max-width="500px">
               <v-card>
-                <v-card-title class="headline">Are you sure you want to delete this {{modelName}}?</v-card-title>
+                <v-card-title class="headline">Are you sure you want to delete this Doctor?</v-card-title>
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="blue darken-1" text @click="closeDelete" class="clickable">Cancel</v-btn>
@@ -102,50 +102,38 @@ import { mapActions, mapGetters } from 'vuex'
       dialog: false,
       dialogDelete: false,
       headers: [
-        {{#feilds}}
-        {{#isString}}
-        { text: '{{feildName}}', value: '{{feildName}}', align: 'start', sortable: true },
-        {{/isString}}
-        {{#isDate}}
-        { text: '{{feildName}}', value: '{{feildName}}', align: 'start', sortable: true },
-        {{/isDate}}
-        {{#isNumber}}
-        { text: '{{feildName}}', value: '{{feildName}}', align: 'start', sortable: true },
-        {{/isNumber}}
-        {{#isBool}}
-        { text: '{{feildName}}', value: '{{feildName}}', align: 'start', sortable: true },
-        {{/isBool}}
-        {{#BelongsTo}}
-        { text: '{{BelongsToModelName}}', value: '{{BelongsToRelationName}}.{{BelongsToModelAttribute}}', align: 'start', sortable: true },
-        {{/BelongsTo}}
-        {{/feilds}}
+        { text: 'department', value: 'department.name', align: 'start', sortable: true },
+        { text: 'name', value: 'name', align: 'start', sortable: true },
+        { text: 'phone', value: 'phone', align: 'start', sortable: true },
+        { text: 'password', value: 'password', align: 'start', sortable: true },
+        { text: 'is_active', value: 'is_active', align: 'start', sortable: true },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-      {{resourceName}}Data: [],
+      doctorsData: [],
       search: '',
       skeletonLoader: false
     }),
     computed: {
-      ...mapGetters("{{modelName}}", ["{{resourceName}}"])
+      ...mapGetters("Doctor", ["doctors"])
     },
     methods: {
-      ...mapActions("{{modelName}}", ["index"]),
+      ...mapActions("Doctor", ["index"]),
       initialize () {
         this.index()
         .then(() => {
-          this.{{resourceName}}Data = this.{{resourceName}}
+          this.doctorsData = this.doctors
 
           this.skeletonLoader = false
         })
       },
-      create{{modelName}} () {
-        this.$router.push(`/{{resourceName}}/create`)
+      createDoctor () {
+        this.$router.push(`/doctors/create`)
       },
       deleteItem () {
         this.dialog = true
       },
       editItem (item) {
-        this.$router.push(`/{{resourceName}}/${item.id}/edit`)
+        this.$router.push(`/doctors/${item.id}/edit`)
       },
       closeDelete () {
         this.dialog = false
@@ -157,13 +145,13 @@ import { mapActions, mapGetters } from 'vuex'
         .then(() => this.closeDelete())
         .catch((error) => console.log(error))
       },
-      search{{modelName}}(){
+      searchDoctor(){
         if(this.search === ''){
           this.initialize()
 
           this.search = ''
         }else{
-          this.{{resourceName}}Data = this.{{resourceName}}Data.filter( {{singleResourceName}} => {{singleResourceName}}.name.toUpperCase().includes(this.search.toUpperCase()))
+          this.doctorsData = this.doctorsData.filter( doctor => doctor.name.toUpperCase().includes(this.search.toUpperCase()))
         }
       }
     },

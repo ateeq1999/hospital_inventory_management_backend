@@ -148,14 +148,14 @@ export default {
         ...mapGetters("Unit", ["units"])
     },
     methods: {
-        ...mapActions("Equipment", ["create"]),
+        ...mapActions("Equipment", ["store"]),
         ...mapActions("Unit", ["index"]),
         async submit () {
             this.isLoading = true
 
             console.log(this.form)
 
-            await this.create(this.form)
+            await this.store(this.form)
 
             this.$router.push('/equipment/index')
 

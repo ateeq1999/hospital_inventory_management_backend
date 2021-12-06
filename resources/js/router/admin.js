@@ -1,5 +1,9 @@
 import equipment from './routes/equipment'
 import units from './routes/units'
+import managers from './routes/managers'
+import staff from './routes/staff'
+import departments from './routes/departments'
+import doctors from './routes/doctors'
 
 export default [
   {
@@ -15,5 +19,9 @@ export default [
     meta: { authAdmin: true },
   },
   ...units,
-  ...equipment
+  ...equipment,
+  ...managers,
+  ...staff,
+  ...departments,
+  ...doctors,
 ]

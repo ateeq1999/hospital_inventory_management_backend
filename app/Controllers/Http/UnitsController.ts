@@ -4,7 +4,7 @@ import CreateUnitValidator from 'App/Validators/CreateUnitValidator'
 
 export default class UnitsController {
 	public async index ({ response }: HttpContextContract) {
-		const units = await Unit.all()
+		const units = await Unit.query().preload('equipments')
 
 		return response.status(200).json(units)
 	}

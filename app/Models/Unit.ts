@@ -4,8 +4,11 @@ import {
   beforeCreate,
   afterCreate,
   BaseModel,
+  hasMany,
+  HasMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import UuidHook from './hooks/UuidHook'
+import Equipment from './Equipment'
 
 export default class Unit extends BaseModel {
   public static selfAssignPrimaryKey = true
@@ -39,4 +42,7 @@ export default class Unit extends BaseModel {
   public static async newUnitCreated (unit: Unit) {
     console.log(unit)
   }
+
+  @hasMany(() => Equipment)
+  public equipments: HasMany<typeof Equipment>
 }

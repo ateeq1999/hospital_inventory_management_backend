@@ -64,5 +64,5 @@ export default class Doctor extends BaseModel {
     foreignKey: "department_id",
     localKey: "id",
   })
-  public cashier: BelongsTo<typeof Department>
+  public department: BelongsTo<typeof Department>
 }

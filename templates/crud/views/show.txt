@@ -49,7 +49,7 @@ export default {
             .then(() => {
                 this.loader = false
 
-                this.$router.push('/units')
+                this.$router.push('/{{resourceName}}')
             })
             .catch(err => console.log(err))
         },

@@ -220,7 +220,7 @@ export default {
                 {{feildName}}: false,
                 {{/isBool}}
                 {{/feilds}}
-            },
+            }
         },
     },
     created(){

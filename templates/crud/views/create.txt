@@ -171,7 +171,7 @@ export default {
         {{/feilds}}
     },
     methods: {
-        ...mapActions("{{modelName}}", ["create"]),
+        ...mapActions("{{modelName}}", ["store"]),
         {{#feilds}}
         {{#BelongsTo}}
         ...mapActions("{{BelongsToModelName}}", ["index"]),
@@ -180,17 +180,17 @@ export default {
         async submit () {
             this.isLoading = true
 
-            await this.create(this.form)
+            await this.store(this.form)
 
-            this.$router.push('/{{resourceName}}/index')
+            this.$router.push('/{{resourceName}}')
 
             this.isLoading = false
         },
         {{#feilds}}
         {{#BelongsTo}}
         removeFromSelected_{{hasManyTableName}} (item) {
-            const index = this.form.{{feildName}}.indexOf(item.id)
-            if (index >= 0) this.form.{{feildName}}.splice(index, 1)
+            const index = this.{{hasmanyRelationName}}.indexOf(item.id)
+            if (index >= 0) this.{{hasmanyRelationName}}.splice(index, 1)
         },
         {{/BelongsTo}}
         {{/feilds}}

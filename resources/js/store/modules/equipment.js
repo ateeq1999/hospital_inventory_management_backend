@@ -1,36 +1,38 @@
+const RESOURCE_ROUTE = 'equipments'
+
 const state = {
     equipment: {},
-    equipment: [],
+    equipments: [],
     error: null,
     status: 'Loading',
 }
 
 const getters = {
     equipment: state => state.equipment,
-    equipment: state => state.equipment,
+    equipments: state => state.equipments,
     error: state => state.error,
 }
 
 const actions = {
     index({commit}){
         return new Promise((resolve, reject) => {
-            $http.get('/equipment')
+            $http.get(`${RESOURCE_ROUTE}`)
             .then(resp => {
-                const equipment = resp.data
-                localStorage.setItem('equipment', JSON.stringify(equipment))
-                commit('equipment_success', equipment)
+                const equipments = resp.data
+                localStorage.setItem('equipments', JSON.stringify(equipments))
+                commit('equipments_success', equipments)
                 resolve(resp)
             })
             .catch(err => {
                 commit('equipment_error', err)
-                localStorage.removeItem('equipment')
+                localStorage.removeItem('equipments')
                 reject(err)
             })
         })
     },
     show({commit}, unitId){
         return new Promise((resolve, reject) => {
-            $http.get(`/equipment/${unitId}`)
+            $http.get(`${RESOURCE_ROUTE}/${unitId}`)
             .then(resp => {
                 const equipment = resp.data
                 localStorage.setItem('equipment', JSON.stringify(equipment))
@@ -46,7 +48,7 @@ const actions = {
     },
     store({commit}, formData){
         return new Promise((resolve, reject) => {
-            $http.post(`/equipment`, formData)
+            $http.post(`${RESOURCE_ROUTE}`, formData)
             .then(resp => {
                 commit('CREATE_SUCCESS', 'SUCCESS')
                 resolve(resp)
@@ -60,7 +62,7 @@ const actions = {
     update({commit}, formData){
         console.log(formData)
         return new Promise((resolve, reject) => {
-            $http.put(`/equipment/${formData.id}`, formData)
+            $http.put(`${RESOURCE_ROUTE}/${formData.id}`, formData)
             .then(resp => {
                 const equipment = resp.data
 
@@ -81,7 +83,7 @@ const actions = {
     },
     delete({commit}, unitId){
         return new Promise((resolve, reject) => {
-            $http.delete(`/equipment/${unitId}`)
+            $http.delete(`${RESOURCE_ROUTE}/${unitId}`)
             .then(resp => {
                 localStorage.removeItem('equipment')
                 
@@ -105,8 +107,8 @@ const mutations = {
   equipment_error(state, error){
     state.error = error
   },
-  equipment_success(state, payload){
-    state.equipment = payload
+  equipments_success(state, payload){
+    state.equipments = payload
   },
   equipment_success(state, payload){
     state.equipment = payload

@@ -11,7 +11,7 @@
     <v-card-text v-if="!skeletonLoader" class="pa-16">
       <v-data-table
         :headers="headers"
-        :items="{{resourceName}}Data"
+        :items="departmentsData"
         sort-by="id"
         round
         flat
@@ -21,7 +21,7 @@
           <v-toolbar
             flat
           >
-            <v-toolbar-title>{{resourceName}}</v-toolbar-title>
+            <v-toolbar-title>departments</v-toolbar-title>
             <v-divider
               class="mx-4 clickable"
               inset
@@ -36,7 +36,7 @@
               label="Search"
               single-line
               hide-details
-              @input="search{{modelName}}"
+              @input="searchDepartment"
             ></v-text-field>
             <v-divider
               class="mx-4 clickable"
@@ -46,13 +46,13 @@
             <v-btn
               dark
               class="clickable"
-              @click="create{{modelName}}"
+              @click="createDepartment"
             >
-              New {{modelName}}
+              New Department
             </v-btn>
             <v-dialog v-model="dialog" max-width="500px">
               <v-card>
-                <v-card-title class="headline">Are you sure you want to delete this {{modelName}}?</v-card-title>
+                <v-card-title class="headline">Are you sure you want to delete this Department?</v-card-title>
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="blue darken-1" text @click="closeDelete" class="clickable">Cancel</v-btn>
@@ -102,50 +102,35 @@ import { mapActions, mapGetters } from 'vuex'
       dialog: false,
       dialogDelete: false,
       headers: [
-        {{#feilds}}
-        {{#isString}}
-        { text: '{{feildName}}', value: '{{feildName}}', align: 'start', sortable: true },
-        {{/isString}}
-        {{#isDate}}
-        { text: '{{feildName}}', value: '{{feildName}}', align: 'start', sortable: true },
-        {{/isDate}}
-        {{#isNumber}}
-        { text: '{{feildName}}', value: '{{feildName}}', align: 'start', sortable: true },
-        {{/isNumber}}
-        {{#isBool}}
-        { text: '{{feildName}}', value: '{{feildName}}', align: 'start', sortable: true },
-        {{/isBool}}
-        {{#BelongsTo}}
-        { text: '{{BelongsToModelName}}', value: '{{BelongsToRelationName}}.{{BelongsToModelAttribute}}', align: 'start', sortable: true },
-        {{/BelongsTo}}
-        {{/feilds}}
+        { text: 'name', value: 'name', align: 'start', sortable: true },
+        { text: 'is_active', value: 'is_active', align: 'start', sortable: true },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-      {{resourceName}}Data: [],
+      departmentsData: [],
       search: '',
       skeletonLoader: false
     }),
     computed: {
-      ...mapGetters("{{modelName}}", ["{{resourceName}}"])
+      ...mapGetters("Department", ["departments"])
     },
     methods: {
-      ...mapActions("{{modelName}}", ["index"]),
+      ...mapActions("Department", ["index"]),
       initialize () {
         this.index()
         .then(() => {
-          this.{{resourceName}}Data = this.{{resourceName}}
+          this.departmentsData = this.departments
 
           this.skeletonLoader = false
         })
       },
-      create{{modelName}} () {
-        this.$router.push(`/{{resourceName}}/create`)
+      createDepartment () {
+        this.$router.push(`/departments/create`)
       },
       deleteItem () {
         this.dialog = true
       },
       editItem (item) {
-        this.$router.push(`/{{resourceName}}/${item.id}/edit`)
+        this.$router.push(`/departments/${item.id}/edit`)
       },
       closeDelete () {
         this.dialog = false
@@ -157,13 +142,13 @@ import { mapActions, mapGetters } from 'vuex'
         .then(() => this.closeDelete())
         .catch((error) => console.log(error))
       },
-      search{{modelName}}(){
+      searchDepartment(){
         if(this.search === ''){
           this.initialize()
 
           this.search = ''
         }else{
-          this.{{resourceName}}Data = this.{{resourceName}}Data.filter( {{singleResourceName}} => {{singleResourceName}}.name.toUpperCase().includes(this.search.toUpperCase()))
+          this.departmentsData = this.departmentsData.filter( department => department.name.toUpperCase().includes(this.search.toUpperCase()))
         }
       }
     },

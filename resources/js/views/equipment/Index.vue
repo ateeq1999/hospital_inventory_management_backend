@@ -11,7 +11,7 @@
     <v-card-text v-if="!skeletonLoader" class="pa-16">
       <v-data-table
         :headers="headers"
-        :items="equipmentData"
+        :items="equipmentsData"
         sort-by="id"
         round
         flat
@@ -105,19 +105,19 @@ import { mapActions, mapGetters } from 'vuex'
         { text: 'is_active', value: 'is_active', align: 'start', sortable: true },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-      equipmentData: [],
+      equipmentsData: [],
       search: '',
       skeletonLoader: false
     }),
     computed: {
-      ...mapGetters("Equipment", ["equipment"])
+      ...mapGetters("Equipment", ["equipments"])
     },
     methods: {
       ...mapActions("Equipment", ["index"]),
       initialize () {
         this.index()
         .then(() => {
-          this.equipmentData = this.equipment
+          this.equipmentsData = this.equipments
 
           this.skeletonLoader = false
         })
@@ -147,7 +147,7 @@ import { mapActions, mapGetters } from 'vuex'
 
           this.search = ''
         }else{
-          this.equipmentData = this.equipmentData.filter( equipment => equipment.name.toUpperCase().includes(this.search.toUpperCase()))
+          this.equipmentsData = this.equipmentsData.filter( equipment => equipment.name.toUpperCase().includes(this.search.toUpperCase()))
         }
       }
     },

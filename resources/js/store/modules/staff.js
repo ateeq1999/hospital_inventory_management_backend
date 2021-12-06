@@ -1,58 +1,60 @@
+const RESOURCE_ROUTE = 'staff'
+
 const state = {
-    equipman: {},
-    equipmen: [],
+    staff: {},
+    staffs: [],
     error: null,
     status: 'Loading',
 }
 
 const getters = {
-    equipman: state => state.equipman,
-    equipmen: state => state.equipmen,
+    staff: state => state.staff,
+    staffs: state => state.staffs,
     error: state => state.error,
 }
 
 const actions = {
     index({commit}){
         return new Promise((resolve, reject) => {
-            $http.get('/equipmen')
+            $http.get(`/staff`)
             .then(resp => {
-                const equipmen = resp.data
-                localStorage.setItem('equipmen', JSON.stringify(equipmen))
-                commit('equipmen_success', equipmen)
+                const staffs = resp.data
+                localStorage.setItem('staffs', JSON.stringify(staffs))
+                commit('staffs_success', staffs)
                 resolve(resp)
             })
             .catch(err => {
-                commit('equipmen_error', err)
-                localStorage.removeItem('equipmen')
+                commit('staff_error', err)
+                localStorage.removeItem('staffs')
                 reject(err)
             })
         })
     },
-    show({commit}, unitId){
+    show({commit}, staffId){
         return new Promise((resolve, reject) => {
-            $http.get(`/equipmen/${unitId}`)
+            $http.get(`/staff/${staffId}`)
             .then(resp => {
-                const equipman = resp.data
-                localStorage.setItem('equipman', JSON.stringify(equipman))
-                commit('equipman_success', equipman)
+                const staff = resp.data
+                localStorage.setItem('staff', JSON.stringify(staff))
+                commit('staff_success', staff)
                 resolve(resp)
             })
             .catch(err => {
-                commit('equipmen_error', err)
-                localStorage.removeItem('equipman')
+                commit('staff_error', err)
+                localStorage.removeItem('staff')
                 reject(err)
             })
         })
     },
     store({commit}, formData){
         return new Promise((resolve, reject) => {
-            $http.post(`/equipmen`, formData)
+            $http.post(`/staff`, formData)
             .then(resp => {
                 commit('CREATE_SUCCESS', 'SUCCESS')
                 resolve(resp)
             })
             .catch(err => {
-                commit('equipmen_error', err)
+                commit('staff_error', err)
                 reject(err)
             })
         })
@@ -60,37 +62,37 @@ const actions = {
     update({commit}, formData){
         console.log(formData)
         return new Promise((resolve, reject) => {
-            $http.put(`/equipmen/${formData.id}`, formData)
+            $http.put(`/staff/${formData.id}`, formData)
             .then(resp => {
-                const equipman = resp.data
+                const staff = resp.data
 
-                localStorage.setItem('equipman', JSON.stringify(equipman))
+                localStorage.setItem('staff', JSON.stringify(staff))
 
-                commit('equipman_success', equipman)
+                commit('staff_success', staff)
 
                 resolve(resp)
             })
             .catch(err => {
-                commit('equipmen_error', err)
+                commit('staff_error', err)
 
-                localStorage.removeItem('equipman')
+                localStorage.removeItem('staff')
                 
                 reject(err)
             })
         })
     },
-    delete({commit}, unitId){
+    delete({commit}, staffId){
         return new Promise((resolve, reject) => {
-            $http.delete(`/equipmen/${unitId}`)
+            $http.delete(`/staff/${staffId}`)
             .then(resp => {
-                localStorage.removeItem('equipman')
+                localStorage.removeItem('staff')
                 
                 resolve(resp)
             })
             .catch(err => {
-                commit('equipmen_error', err)
+                commit('staff_error', err)
 
-                localStorage.removeItem('equipman')
+                localStorage.removeItem('staff')
 
                 reject(err)
             })
@@ -102,14 +104,14 @@ const mutations = {
   CREATE_SUCCESS(state, payload){
     state.status = payload
   },
-  equipmen_error(state, error){
+  staff_error(state, error){
     state.error = error
   },
-  equipman_success(state, payload){
-    state.equipman = payload
+  staffs_success(state, payload){
+    state.staffs = payload
   },
-  equipmen_success(state, payload){
-    state.equipmen = payload
+  staff_success(state, payload){
+    state.staff = payload
   },
 }
 

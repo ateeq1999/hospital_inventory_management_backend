@@ -4,7 +4,7 @@ import CreateDoctorValidator from 'App/Validators/CreateDoctorValidator'
 
 export default class DoctorsController {
 	public async index ({ response }: HttpContextContract) {
-		const doctors = await Doctor.all()
+		const doctors = await Doctor.query().preload('department')
 
 		return response.status(200).json(doctors)
 	}
