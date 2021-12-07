@@ -87,7 +87,6 @@ export default {
         },
     },
     methods: {
-        // ...mapActions("Unit/store"),
         ...mapActions("Unit", ["store"]),
         submit: function () {
             this.loader = true

@@ -5,7 +5,8 @@ import CreateOrderValidator from 'App/Validators/CreateOrderValidator'
 
 export default class OrdersController {
 	public async index ({ response }: HttpContextContract) {
-		const orders = await Order.all()
+		const orders = await Order.query()
+		.preload('department').preload('doctor').preload('equipments')
 
 		return response.status(200).json(orders)
 	}

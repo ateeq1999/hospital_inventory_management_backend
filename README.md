@@ -14,9 +14,7 @@
 ## Doctor
 [x] id, department_id, name, phone, password, is_active
 ## Order
-[x] doctor_id
-[x] department_id
-[x] items [
+[x] doctor_id, department_id, items [
     {
         equipment_id,
         quantity,

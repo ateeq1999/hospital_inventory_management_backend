@@ -156,17 +156,25 @@ export default {
             {{/BelongsTo}}
             {{/feilds}}
         },
+        
         {{#feilds}}
         {{#isDate}}
         open_{{feildName}}_picker: false,
         {{/isDate}}
         {{/feilds}}
+
+        {{#feilds}}
+        {{#isBelongsTo}}
+        {{hasManyTableName}}Data: [],
+        {{/isBelongsTo}}
+        {{/feilds}}
+
         isLoading: true,
     }),
     computed: {
         {{#feilds}}
         {{#BelongsTo}}
-        ...mapGetters("{{BelongsToModelName}}", ["{{hasManyTableName}}"])
+        ...mapGetters("{{BelongsToModelName}}", ["{{hasManyTableName}}"]),
         {{/BelongsTo}}
         {{/feilds}}
     },
@@ -174,7 +182,7 @@ export default {
         ...mapActions("{{modelName}}", ["store"]),
         {{#feilds}}
         {{#BelongsTo}}
-        ...mapActions("{{BelongsToModelName}}", ["index"]),
+        ...mapActions("{{BelongsToModelName}}", { get_{{hasManyTableName}} :"index" }),
         {{/BelongsTo}}
         {{/feilds}}
         async submit () {
@@ -189,8 +197,8 @@ export default {
         {{#feilds}}
         {{#BelongsTo}}
         removeFromSelected_{{hasManyTableName}} (item) {
-            const index = this.{{hasmanyRelationName}}.indexOf(item.id)
-            if (index >= 0) this.{{hasmanyRelationName}}.splice(index, 1)
+            const index = this.{{hasManyTableName}}.indexOf(item.id)
+            if (index >= 0) this.{{hasManyTableName}}.splice(index, 1)
         },
         {{/BelongsTo}}
         {{/feilds}}
@@ -221,7 +229,7 @@ export default {
 
         {{#feilds}}
         {{#BelongsTo}}
-        this.index()
+        this.get_{{hasManyTableName}}()
         .then(res => {
             this.{{hasManyTableName}}Data = this.{{hasManyTableName}}
         })

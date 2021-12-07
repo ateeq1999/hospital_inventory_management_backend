@@ -51,12 +51,12 @@ export default class Order extends BaseModel {
     relatedKey: 'id',
     pivotRelatedForeignKey: 'equipment_id',
     pivotTable: "order_equipments",
-    pivotColumns: ['qty'],
+    pivotColumns: ['quantity'],
   })
   public equipments: ManyToMany<typeof Equipment>
 
   @belongsTo(() => Doctor, {
-    foreignKey: "Doctor_id",
+    foreignKey: "doctor_id",
     localKey: "id",
   })
   public doctor: BelongsTo<typeof Doctor>

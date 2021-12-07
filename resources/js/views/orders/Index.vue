@@ -11,7 +11,7 @@
     <v-card-text v-if="!skeletonLoader" class="pa-16">
       <v-data-table
         :headers="headers"
-        :items="equipmentsData"
+        :items="ordersData"
         sort-by="id"
         round
         flat
@@ -21,7 +21,7 @@
           <v-toolbar
             flat
           >
-            <v-toolbar-title>equipment</v-toolbar-title>
+            <v-toolbar-title>orders</v-toolbar-title>
             <v-divider
               class="mx-4 clickable"
               inset
@@ -30,13 +30,13 @@
             <v-text-field
               rounded
               outlined
+              dense
               v-model="search"
               append-icon="mdi-magnify"
               label="Search"
               single-line
               hide-details
-              dense
-              @input="searchEquipment"
+              @input="searchOrder"
             ></v-text-field>
             <v-divider
               class="mx-4 clickable"
@@ -45,14 +45,14 @@
             ></v-divider>
             <v-btn
               dark
-              class="mb-2 clickable"
-              @click="createEquipment"
+              class="clickable"
+              @click="createOrder"
             >
-              New Equipment
+              New Order
             </v-btn>
             <v-dialog v-model="dialog" max-width="500px">
               <v-card>
-                <v-card-title class="headline">Are you sure you want to delete this Equipment?</v-card-title>
+                <v-card-title class="headline">Are you sure you want to delete this Order?</v-card-title>
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="blue darken-1" text @click="closeDelete" class="clickable">Cancel</v-btn>
@@ -62,6 +62,20 @@
               </v-card>
             </v-dialog>
           </v-toolbar>
+        </template>
+        <template v-slot:item.equipments="{ item }">
+          <div class="text-center" v-if="item.equipments.length > 0">
+            <v-chip
+              v-for="equipment in item.equipments"
+              :key="equipment.id"
+              class="ma-2"
+            >
+              {{equipment.name}}
+            </v-chip>
+          </div>
+          <div class="text-center" v-else>
+            No Equipment
+          </div>
         </template>
         <template v-slot:item.actions="{ item }">
           <v-icon
@@ -102,39 +116,37 @@ import { mapActions, mapGetters } from 'vuex'
       dialog: false,
       dialogDelete: false,
       headers: [
-        { text: 'name', value: 'name', align: 'start', sortable: true },
-        { text: 'quantity', value: 'quantity', align: 'start', sortable: true },
-        { text: 'is_expire', value: 'is_expire', align: 'start', sortable: true },
-        { text: 'expire_date', value: 'expire_date', align: 'start', sortable: true },
-        { text: 'unit_id', value: 'unit_id', align: 'start', sortable: true },
-        { text: 'is_active', value: 'is_active', align: 'start', sortable: true },
+        { text: 'Doctor', value: 'doctor.name', align: 'start', sortable: true },
+        { text: 'Department', value: 'department.name', align: 'start', sortable: true },
+        { text: 'Equipment', value: 'equipments', align: 'start', sortable: true },
+        { text: 'status', value: 'status', align: 'start', sortable: true },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-      equipmentsData: [],
+      ordersData: [],
       search: '',
       skeletonLoader: false
     }),
     computed: {
-      ...mapGetters("Equipment", ["equipments"])
+      ...mapGetters("Order", ["orders"])
     },
     methods: {
-      ...mapActions("Equipment", ["index"]),
+      ...mapActions("Order", ["index"]),
       initialize () {
         this.index()
         .then(() => {
-          this.equipmentsData = this.equipments
+          this.ordersData = this.orders
 
           this.skeletonLoader = false
         })
       },
-      createEquipment () {
-        this.$router.push(`/equipment/create`)
+      createOrder () {
+        this.$router.push(`/orders/create`)
       },
       deleteItem () {
         this.dialog = true
       },
       editItem (item) {
-        this.$router.push(`/equipment/${item.id}/edit`)
+        this.$router.push(`/orders/${item.id}/edit`)
       },
       closeDelete () {
         this.dialog = false
@@ -146,13 +158,13 @@ import { mapActions, mapGetters } from 'vuex'
         .then(() => this.closeDelete())
         .catch((error) => console.log(error))
       },
-      searchEquipment(){
+      searchOrder(){
         if(this.search === ''){
           this.initialize()
 
           this.search = ''
         }else{
-          this.equipmentsData = this.equipmentsData.filter( equipment => equipment.name.toUpperCase().includes(this.search.toUpperCase()))
+          this.ordersData = this.ordersData.filter( order => order.name.toUpperCase().includes(this.search.toUpperCase()))
         }
       }
     },

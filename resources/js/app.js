@@ -1,5 +1,7 @@
 import '../css/app.css'
 import App from './App.vue'
+// import Inbox from './inbox.vue'
+// import Base from './base.vue'
 import store from './store'
 import router from './router'
 import vuetify from './plugins/vuetify';

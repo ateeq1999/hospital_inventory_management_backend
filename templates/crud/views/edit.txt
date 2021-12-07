@@ -79,15 +79,15 @@
                         <v-col cols="12" sm="12" md="12" >
                             <v-autocomplete
                                 v-model="form.{{feildName}}"
-                                    :items="{{hasManyTableName}}"
-                                    outlined
-                                    chips
-                                    color="blue-grey lighten-2"
-                                    label="{{hasManyTableName}}"
-                                    item-text="name"
-                                    item-value="id"
-                                    dense
-                                >
+                                :items="{{hasManyTableName}}"
+                                outlined
+                                chips
+                                color="blue-grey lighten-2"
+                                label="{{hasManyTableName}}"
+                                item-text="name"
+                                item-value="id"
+                                dense
+                            >
                                 <template v-slot:selection="data">
                                     <v-chip
                                         class="clickable"
@@ -156,16 +156,19 @@ export default {
             {{/BelongsTo}}
             {{/feilds}}
         },
+
         {{#feilds}}
         {{#isDate}}
         open_{{feildName}}_picker: false,
         {{/isDate}}
         {{/feilds}}
+
         {{#feilds}}
         {{#isBelongsTo}}
         {{hasManyTableName}}Data: [],
         {{/isBelongsTo}}
         {{/feilds}}
+
         isLoading: true,
     }),
     computed: {
@@ -180,7 +183,7 @@ export default {
         ...mapActions("{{modelName}}", ["update", "show"]),
         {{#feilds}}
         {{#isBelongsTo}}
-        ...mapActions("{{BelongsToModelName}}", ["index"]),
+        ...mapActions("{{BelongsToModelName}}", { get_{{hasManyTableName}} :"index" }),
         {{/isBelongsTo}}
         {{/feilds}}
         {{#feilds}}
@@ -230,6 +233,15 @@ export default {
         .then(res => {
             this.form = this.{{singleResourceName}}
         })
+
+        {{#feilds}}
+        {{#BelongsTo}}
+        this.get_{{hasManyTableName}}()
+        .then(res => {
+            this.{{hasManyTableName}}Data = this.{{hasManyTableName}}
+        })
+        {{/BelongsTo}}
+        {{/feilds}}
 
         setTimeout(() => this.isLoading = false, 100)
     }

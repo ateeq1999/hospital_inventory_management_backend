@@ -19,6 +19,16 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+// import Admin from 'App/Models/Admin'
+
+// Route.get('/test', async () => {
+//     let admin = await Admin.create({
+//         email: 'admin@admin.com',
+//         password: 'password'
+//     })
+
+//     return admin
+// })
 
 Route.group(() => {
 
@@ -38,7 +48,7 @@ Route.group(() => {
     Route.post("/staff/login", 'StaffAuthController.login')
     Route.post("/staff/register", 'StaffAuthController.register')
     
-}).prefix('api/auth').middleware('auth:api')
+}).prefix('api/auth')
 
 Route.group(() => {
     // Admins Routes
@@ -66,6 +76,6 @@ Route.group(() => {
     Route.resource('orders', 'OrdersController').apiOnly()
 })
 .prefix('api')
-// .middleware('auth:api,manager,staff,doctor')
+.middleware('auth:api,manager,staff,doctor')
 
 Route.on('*').render('app')

@@ -4,8 +4,11 @@ import {
   beforeCreate,
   afterCreate,
   BaseModel,
+  manyToMany,
+  ManyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import UuidHook from './hooks/UuidHook'
+import Order from './Order'
 
 export default class Equipment extends BaseModel {
   public static selfAssignPrimaryKey = true
@@ -55,4 +58,14 @@ export default class Equipment extends BaseModel {
   public static async newEquipmentCreated (equipment: Equipment) {
     console.log(equipment)
   }
+
+  @manyToMany(() => Order, {
+    localKey: 'id',
+    pivotForeignKey: 'equipment_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'order_id',
+    pivotTable: "order_equipments",
+    pivotColumns: ['quantity'],
+  })
+  public orders: ManyToMany<typeof Order>
 }

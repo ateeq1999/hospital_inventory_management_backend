@@ -8,6 +8,7 @@ import equipment from './modules/equipment'
 import staff from './modules/staff'
 import department from './modules/department'
 import doctor from './modules/doctor'
+import order from './modules/order'
 
 Vue.use(Vuex)
 
@@ -34,5 +35,6 @@ export default new Vuex.Store({
     Staff: staff,
     Department: department,
     Doctor: doctor,
+    Order: order,
   }
 })

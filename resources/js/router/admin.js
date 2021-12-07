@@ -4,6 +4,7 @@ import managers from './routes/managers'
 import staff from './routes/staff'
 import departments from './routes/departments'
 import doctors from './routes/doctors'
+import orders from './routes/orders'
 
 export default [
   {
@@ -24,4 +25,5 @@ export default [
   ...staff,
   ...departments,
   ...doctors,
+  ...orders,
 ]

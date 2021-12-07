@@ -43,6 +43,9 @@ export default class Unit extends BaseModel {
     console.log(unit)
   }
 
-  @hasMany(() => Equipment)
+  @hasMany(() => Equipment, {
+    localKey: 'id',
+    foreignKey: 'unit_id',
+  })
   public equipments: HasMany<typeof Equipment>
 }
