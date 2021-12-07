@@ -19,16 +19,6 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
-// import Admin from 'App/Models/Admin'
-
-// Route.get('/test', async () => {
-//     let admin = await Admin.create({
-//         email: 'admin@admin.com',
-//         password: 'password'
-//     })
-
-//     return admin
-// })
 
 Route.group(() => {
 

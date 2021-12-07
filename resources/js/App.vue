@@ -1,7 +1,7 @@
 <template>
   <v-app id="inspire" dark>
-    <!-- <Sidebar :drawer="drawer" v-if="this.$store.getters['Auth/isLoggedIn']" />
-    <Topbar @drawerEvent="drawer = !drawer" v-if="this.$store.getters['Auth/isLoggedIn']" /> -->
+    <Sidebar :drawer="drawer" v-if="this.$store.getters['Auth/isLoggedIn']" />
+    <Topbar @drawerEvent="drawer = !drawer" v-if="this.$store.getters['Auth/isLoggedIn']" />
     <v-main>
       <router-view></router-view>
     </v-main>

@@ -25,6 +25,13 @@ export default {
     return {
       links: [
         ["fa-home", "Dashboard", "/"],
+        ["mdi-account", "Managers", "/managers"],
+        ["mdi-doctor", "Doctor", "/doctors"],
+        ["mdi-group", "Staff", "/staff"],
+        ["mdi-group", "Departments", "/departments"],
+        ["mdi-group", "Units", "/units"],
+        ["mdi-group", "Equipment", "/equipment"],
+        ["mdi-group", "Orders", "/orders"],
       ],
     };
   },
