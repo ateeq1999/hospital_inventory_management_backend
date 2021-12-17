@@ -6,12 +6,12 @@ export default class UserLoginValidator {
 	}
 
 	public schema = schema.create({
-		ssn: schema.string({}),
+		phone: schema.string({}),
 		password: schema.string({}),
 	})
 
 	public messages = {
-		'ssn.required': 'ssn is required',
+		'phone.required': 'phone is required',
 		'password': 'password is required',
 	}
 }

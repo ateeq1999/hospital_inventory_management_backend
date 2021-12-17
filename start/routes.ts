@@ -64,8 +64,6 @@ Route.group(() => {
     
     // orders Routes
     Route.resource('orders', 'OrdersController').apiOnly()
-})
-.prefix('api')
-.middleware('auth:api,manager,staff,doctor')
+}).prefix('api').middleware('auth:api,doctor,manager,staff')
 
 Route.on('*').render('app')
